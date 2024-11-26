@@ -5,8 +5,8 @@ import AuthContext from "../../utils/AuthContext";
 import { Rating, ThinRoundedStar } from "@smastrom/react-rating";
 import Jazzicon from "react-jazzicon/dist/Jazzicon";
 import { toast } from "react-toastify";
-import {ReviewsLoding} from '../Loding';
-import { CSSTransition } from 'react-transition-group';
+import { ReviewsLoding } from "../Loding";
+import { CSSTransition } from "react-transition-group";
 
 const includedShapesStyles = [ThinRoundedStar].map((itemShapes) => ({
   itemShapes,
@@ -25,7 +25,7 @@ export const Reviews = ({
   IsError,
   getmoviereviews,
   getmovierating,
-  reviewloading
+  reviewloading,
 }) => {
   const { isLogged, contract } = useContext(AuthContext);
 
@@ -35,18 +35,17 @@ export const Reviews = ({
   const [popup, setPopup] = useState(false);
 
   const reviewposthandler = async () => {
-    if (Review.length < 150) {
+    if (Review.length < 50) {
       toast.error("Minimum character limit not met.");
       return;
     } else {
-      if(rating === 0){
+      if (rating === 0) {
         toast.error("Please give rating");
         return;
-      } else{
+      } else {
         if (movieid) {
           toast.promise(
-            contract
-              .rateMovie(movieid, moviename, Review, rating),
+            contract.rateMovie(movieid, moviename, Review, rating),
             {
               pending: "posting review...",
               success: {
@@ -61,24 +60,26 @@ export const Reviews = ({
               error: "Something went wrong 😕",
             }
           );
-          
         } else if (seriesid) {
-          toast.promise(contract.rateSeries(seriesid, seriesname, Review, rating), {
-            pending: "posting review...",
-            success: {
-              render() {
-                setIsReview(true);
-                closePopupHandle();
-                return "Review posted successfully! 🎉";
+          toast.promise(
+            contract.rateSeries(seriesid, seriesname, Review, rating),
+            {
+              pending: "posting review...",
+              success: {
+                render() {
+                  setIsReview(true);
+                  closePopupHandle();
+                  return "Review posted successfully! 🎉";
+                },
               },
-            },
-            error: {
-              render({ err }) {
-                console.log("error while postreview ", err);
-                return "Something went wrong 😕";
+              error: {
+                render({ err }) {
+                  console.log("error while postreview ", err);
+                  return "Something went wrong 😕";
+                },
               },
-            },
-          });
+            }
+          );
         }
       }
     }
@@ -101,7 +102,6 @@ export const Reviews = ({
   return (
     <>
       {!IsError && (
-        
         <div
           className={`md:container mx-auto px-4 py-1 ${
             popup && "overflow-hidden"
@@ -139,83 +139,83 @@ export const Reviews = ({
             </div>
           </div>
 
-          
-       <CSSTransition
-        in={popup}
-        timeout={300}
-        classNames="popup"
-        unmountOnExit
-      >
-              <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center">
-                <div
-                  className="w-full h-full z-10 absolute backdrop-blur-md"
-                  onClick={closePopupHandle}
-                ></div>
+          <CSSTransition
+            in={popup}
+            timeout={300}
+            classNames="popup"
+            unmountOnExit
+          >
+            <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center">
+              <div
+                className="w-full h-full z-10 absolute backdrop-blur-md"
+                onClick={closePopupHandle}
+              ></div>
 
-                <div
-                  className={`px-8 py-4 bg-gray-700 z-20 rounded-lg overflow-hidden shadow-xl shadow-gray-800`}
-                >
-                  <div className="flex justify-center items-center px-5 py-3">
-                    <h2 className="text-2xl font-semibold flex">
-                      What is your rating?
-                    </h2>
+              <div
+                className={`px-8 py-4 bg-gray-700 z-20 rounded-lg overflow-hidden shadow-xl shadow-gray-800`}
+              >
+                <div className="flex justify-center items-center px-5 py-3">
+                  <h2 className="text-2xl font-semibold flex">
+                    What is your rating?
+                  </h2>
+                </div>
+                <div className="flex flex-col justify-center items-center px-5 py-3">
+                  <div style={{ maxWidth: 380, width: "100%" }}>
+                    {includedShapesStyles.map((itemStyles, index) => (
+                      <Rating
+                        key={`shape_${index}`}
+                        value={rating}
+                        onChange={setRating}
+                        itemStyles={itemStyles}
+                        items={10}
+                        spaceBetween="small"
+                      />
+                    ))}
                   </div>
-                  <div className="flex flex-col justify-center items-center px-5 py-3">
-                    <div style={{ maxWidth: 380, width: "100%" }}>
-                      {includedShapesStyles.map((itemStyles, index) => (
-                        <Rating
-                          key={`shape_${index}`}
-                          value={rating}
-                          onChange={setRating}
-                          itemStyles={itemStyles}
-                          items={10}
-                          spaceBetween="small"
-                        />
-                      ))}
-                    </div>
 
-                    <div className="flex justify-center items-center mx-5 my-3 w-full">
-                      <textarea
-                        className="w-full h-32 bg-transparent border border-white mt-3 rounded-lg p-3 "
-                        placeholder="Write your review here..."
-                        value={Review}
-                        onChange={(e) => setReview(e.target.value)}
-                      ></textarea>
-                    </div>
-                    <div className="self-end">
-                      {Review.length <= 150 ? (
-                        <span className="text-gray-400 text-sm px-2">
-                          Require characters: {150 - Review.length}
-                        </span>
-                      ) : (
-                        <span className="text-gray-400 text-sm px-2">
-                          Minimum character limit met.
-                        </span>
-                      )}
-                    </div>
+                  <div className="flex justify-center items-center mx-5 my-3 w-full">
+                    <textarea
+                      className="w-full h-32 bg-transparent border border-white mt-3 rounded-lg p-3 "
+                      placeholder="Write your review here..."
+                      value={Review}
+                      onChange={(e) => setReview(e.target.value)}
+                    ></textarea>
+                  </div>
+                  <div className="self-end">
+                    {Review.length <= 50 ? (
+                      <span className="text-gray-400 text-sm px-2">
+                        Require characters: {50 - Review.length}
+                      </span>
+                    ) : (
+                      <span className="text-gray-400 text-sm px-2">
+                        Minimum character limit met.
+                      </span>
+                    )}
+                  </div>
 
-                    <div className="flex justify-end items-center mr-6 my-3 w-full">
-                      <button
-                        className="text-white bg-transparent border border-gray-600 py-3 px-5 rounded-lg transition-colors mr-3"
-                        onClick={closePopupHandle}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        className="text-white bg-blue-600 py-3 px-5 rounded-lg transition-colors"
-                        onClick={reviewposthandler}
-                      >
-                        Post
-                      </button>
-                    </div>
+                  <div className="flex justify-end items-center mr-6 my-3 w-full">
+                    <button
+                      className="text-white bg-transparent border border-gray-600 py-3 px-5 rounded-lg transition-colors mr-3"
+                      onClick={closePopupHandle}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="text-white bg-blue-600 py-3 px-5 rounded-lg transition-colors"
+                      onClick={reviewposthandler}
+                    >
+                      Post
+                    </button>
                   </div>
                 </div>
               </div>
-            
-      </CSSTransition>
+            </div>
+          </CSSTransition>
           {/* other user reviews */}
           <div>
-            {reviewloading ? <ReviewsLoding/> : userReviews && userReviews.length > 0 ? (
+            {reviewloading ? (
+              <ReviewsLoding />
+            ) : userReviews && userReviews.length > 0 ? (
               userReviews.slice(0, 2).map((review, key) => (
                 <article
                   className="my-5 border border-gray-600 px-5 py-5"

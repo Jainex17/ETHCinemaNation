@@ -7,7 +7,7 @@ export const MovieCard = ({ movie,sortoption }) => {
       <Link href={`/${sortoption == "tv" ? "series" : sortoption}/${movie.id}`}>
         <div className="cursor-pointer bg-[#303339]  rounded-md shadow-xl hover:transform hover:-translate-y-1 transition ease-in">
           <Image
-            loader={({ src }) => `https://image.tmdb.org/t/p/w500${src}`}
+            // loader={({ src }) => `https://image.tmdb.org/t/p/w500${src}`}
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             alt="movie poster"
             className="rounded-t-md hover:opacity-75 transition ease-in-out duration-150"

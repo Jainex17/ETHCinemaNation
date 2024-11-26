@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useContext } from "react";
+import React from "react";
 import { SingleMovieLoding } from "../Loding.js";
 import Link from "next/link";
 import Image from "next/image";

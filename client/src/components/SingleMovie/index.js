@@ -31,49 +31,35 @@ export const SingleMovie = ({movieid, seriesid}) => {
         process.env.THEMOVIEDB_API_KEY
       }&language=en-US&page=1&append_to_response=videos,images,credits,reviews,external_ids`;
 
-      await fetch(url)
-        .then((res) => res.json())
-        .then((data) => {
-          setMoviedetails(data);
-          setMovieLoading(false);
-        });
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setMoviedetails(data);
+      setMovieLoading(false);
     } catch (err) {
-      toast("Something went wrong!");
+      toast.error(`Failed to fetch movie details: ${err.message}`);
       setIsError(true);
-      console.error("failed to fetch data in SingleMovieComp", err);
+      console.error("Failed to fetch data:", err);
     }
   }, [movieid, seriesid]);
 
   const getmovierating = useCallback(async () => {
-    if (contract != null) {
-      if(movieid){
-        await contract
-        .getMovieRating(movieid)
-        .then((res) => {
-          setRatingdetails({
-            totalRate: parseInt(res[1]),
-            avgRate: parseInt(res[2]),
-          });
-        })
-        .catch((err) => {
-          toast.error("Something went wrong!");
-          console.error("error getting while single movie getting rating", err);
-        });
-      }
-      if(seriesid){
-        await contract
-        .getSeriesRating(seriesid)
-        .then((res) => {
-          setRatingdetails({
-            totalRate: parseInt(res[1]),
-            avgRate: parseInt(res[2]),
-          });
-        })
-        .catch((err) => {
-          toast.error("Something went wrong!");
-          console.error("error getting while single series getting rating", err);
-        });
-      }
+    if (!contract) return;
+    
+    try {
+      const result = await (movieid 
+        ? contract.getMovieRating(movieid)
+        : contract.getSeriesRating(seriesid));
+      
+      setRatingdetails({
+        totalRate: parseInt(result[1]),
+        avgRate: parseInt(result[2]),
+      });
+    } catch (err) {
+      toast.error(`Failed to get rating: ${err.message}`);
+      console.error("Error getting rating:", err);
     }
   }, [contract, movieid, seriesid]);
   

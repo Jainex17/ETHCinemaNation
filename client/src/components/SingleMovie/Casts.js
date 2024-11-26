@@ -23,9 +23,9 @@ export const Casts = ({moviedetails, IsError}) => {
                             <Image
                               width={200}
                               height={200}
-                              loader={({ src }) =>
-                                `https://image.tmdb.org/t/p/w185${src}`
-                              }
+                              // loader={({ src }) =>
+                              //   `https://image.tmdb.org/t/p/w185${src}`
+                              // }
                               src={`https://image.tmdb.org/t/p/w185${cast.profile_path}`}
                               alt="cast"
                               // priority={false}

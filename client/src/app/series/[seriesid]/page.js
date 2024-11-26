@@ -1,6 +1,5 @@
 "use client";
 
-import Head from "next/head";
 import {SingleMovie} from "../../../components/SingleMovie/index";
 import { usePathname } from "next/navigation";
 
@@ -11,9 +10,6 @@ const SingleSeries = () => {
 
   return (
     <>
-      <Head>
-        <title>Ethcinemanation/series</title>
-      </Head>
       <SingleMovie seriesid={seriesid} />
     </>
   );

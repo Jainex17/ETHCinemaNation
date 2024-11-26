@@ -81,11 +81,7 @@ export const AuthProvider = ({ children }) => {
 
         setValue({ provider, signer, contract, isLogged: true });
 
-        getaccountdetails(accounts);
-        
-        console.log("signer ", signer);
-        console.log("contract ", contract);
-        
+        getaccountdetails(accounts);  
       } else {
         toast.warning("Please install MetaMask");
       }
