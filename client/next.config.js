@@ -1,14 +1,10 @@
-require("dotenv").config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
+require('dotenv').config();
 
 /** @type {import('next').NextConfig} */
-
 const nextConfig = {
   reactStrictMode: true,
-};
-
-module.exports = nextConfig;
-
-module.exports = {
   env: {
     THEMOVIEDB_API_KEY: process.env.THEMOVIEDB_API_KEY,
   },
@@ -16,3 +12,5 @@ module.exports = {
     domains: ["image.tmdb.org", "localhost", "walletconnect.com"],
   },
 };
+
+module.exports = nextConfig;
