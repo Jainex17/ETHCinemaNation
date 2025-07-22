@@ -6,6 +6,7 @@ require('dotenv').config();
 const nextConfig = {
   reactStrictMode: true,
   env: {
+    // Expose TMDB API key to the client side
     THEMOVIEDB_API_KEY: process.env.THEMOVIEDB_API_KEY,
   },
   images: {

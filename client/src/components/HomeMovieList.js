@@ -4,6 +4,7 @@ import Image from "next/image";
 import MovieCarousel, { SeriesCarousel } from "./layout/MovieCarousel";
 import { HomeCarouselLoding, SearchLoding } from "./Loding";
 import { toast } from "react-toastify";
+import { fetchTMDBData, buildTMDBUrl } from "../utils/tmdbUtils";
 
 const noresultimg = require("../asset/noresult.png");
 
@@ -55,16 +56,20 @@ export const SearchMovieList = ({
   useEffect(() => {
     const fetchsearchData = async () => {
       let urlencode = encodeURI(searchtext);
-      const url = `https://api.themoviedb.org/3/search/${sortoption}?api_key=${process.env.THEMOVIEDB_API_KEY}&page=1&query=${urlencode}&limit=10`;
+      const url = buildTMDBUrl(`search/${sortoption}`, {
+        page: 1,
+        query: urlencode,
+        limit: 10
+      });
 
-      const res = await fetch(url);
-
-      if (!res.ok) {
-        toast("Something went wrong!");
-        console.error("Failed to fetch data");
+      const data = await fetchTMDBData(url);
+      
+      if (data) {
+        setsearchMoviedata(data);
+      } else {
+        // If API fails, show empty results
+        setsearchMoviedata({ results: [], total_results: 0 });
       }
-      const data = await res.json();
-      setsearchMoviedata(data);
       setSearchLoading(false);
     };
     fetchsearchData();

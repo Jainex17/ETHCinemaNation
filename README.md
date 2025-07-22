@@ -9,7 +9,7 @@ To run this project, you'll need:
 1. **TMDB API Key**: Get a free API key from [The Movie Database (TMDB)](https://www.themoviedb.org/settings/api)
 2. **Node.js**: Version 18.x or higher
 
-## Setup
+## Quick Setup
 
 1. Clone the repository
 2. Navigate to the client directory: `cd client`
@@ -19,7 +19,10 @@ To run this project, you'll need:
    ```
    THEMOVIEDB_API_KEY=your_actual_api_key_here
    ```
-6. Run the development server: `npm run dev`
+6. Test your API key: `node test-tmdb-api.js`
+7. Run the development server: `npm run dev`
+
+For detailed TMDB API setup instructions, see [TMDB_SETUP.md](client/TMDB_SETUP.md).
 
 ## Screenshots
 <table>

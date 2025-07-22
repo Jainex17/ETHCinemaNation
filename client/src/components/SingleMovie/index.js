@@ -1,6 +1,7 @@
 import React,{ useCallback, useContext, useEffect, useState } from 'react'
 import { toast } from "react-toastify";
 import AuthContext from "../../utils/AuthContext";
+import { fetchTMDBData, buildTMDBUrl } from "../../utils/tmdbUtils";
 
 import { MovieDetails } from './Moviedetails';
 import { Reviews } from './Reviews';
@@ -25,19 +26,19 @@ export const SingleMovie = ({movieid, seriesid}) => {
 
   const fetchData = useCallback(async () => {
     try {
-      const url = `https://api.themoviedb.org/3/${movieid ? "movie" : "tv"}/${
-        movieid ? movieid : seriesid
-      }?api_key=${
-        process.env.THEMOVIEDB_API_KEY
-      }&language=en-US&page=1&append_to_response=videos,images,credits,reviews,external_ids`;
+      const url = buildTMDBUrl(`${movieid ? "movie" : "tv"}/${movieid ? movieid : seriesid}`, {
+        language: 'en-US',
+        page: 1,
+        append_to_response: 'videos,images,credits,reviews,external_ids'
+      });
 
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const data = await fetchTMDBData(url);
+      if (data) {
+        setMoviedetails(data);
+        setMovieLoading(false);
+      } else {
+        setIsError(true);
       }
-      const data = await response.json();
-      setMoviedetails(data);
-      setMovieLoading(false);
     } catch (err) {
       toast.error(`Failed to fetch movie details: ${err.message}`);
       setIsError(true);
